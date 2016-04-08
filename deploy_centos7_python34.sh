@@ -39,19 +39,19 @@ fi
 # début de la création d'utilisateur
 VALID_USER_RE='^[a-zA-Z][a-zA-Z0-9_\-]{5,}$'
 
-if [ "$DJANGOUSER" == "" ]; then
-    read -p "Nom pour l'utilisateur django : " DJANGOUSER
+if [ "$DJANGO_USER" == "" ]; then
+    read -p "Nom pour l'utilisateur django : " DJANGO_USER
 fi
 
-echo "1- $DJANGOUSER"
+echo "1- $DJANGO_USER"
 
-while [[ ! "$DJANGOUSER" =~ $VALID_USER_RE ]]
+while [[ ! "$DJANGO_USER" =~ $VALID_USER_RE ]]
 do
         echo "Le nom d'utilisateur doit faire au moins 5 caractères, être composé de lettres et de chiffres et commencer par une lettre"
-        read -p "Nom pour l'utilisateur django : " DJANGOUSER
+        read -p "Nom pour l'utilisateur django : " DJANGO_USER
 done
 
-if [ "$(cut -d: -f1 /etc/passwd | grep $DJANGOUSER)" != "" ]; then 
+if [ "$(cut -d: -f1 /etc/passwd | grep $DJANGO_USER)" != "" ]; then 
     echo "L'utilisateur existe déja"
 else
     while [ -z $PASSWORD ]
@@ -68,12 +68,28 @@ else
         echo -e "\n"
     done
     
-    useradd $DJANGOUSER
-    echo $DJANGOUSER:$PASSWORD | chpasswd
+    useradd $DJANGO_USER
+    echo $DJANGO_USER:$PASSWORD | chpasswd
 fi
 # fin de la création de l'utilisateur
 #####################################
 
 # début de la création du projet django
 #######################################
-
+DJANGO_USER="django"
+read -p "Nom du projet django : " DJANGO_PROJECT
+if [ -d "/home/$DJANGO_USER/$DJANGO_PROJECT" ]; then
+    echo "Ce projet existe déja"
+else
+    mkdir -v /home/$DJANGO_USER/$DJANGO_PROJECT
+    cd /home/$DJANGO_USER/$DJANGO_PROJECT
+    virtualenv -p /usr/bin/python3 "$DJANGO_PROJECT"_env
+    source "$DJANGO_PROJECT"_env/bin/activate
+    pip install django 
+    django-admin startproject $DJANGO_PROJECT .
+    cd $DJANGO_PROJECT
+    /home/$DJANGO_USER/$DJANGO_PROJECT/manage.py makemigrations
+    /home/$DJANGO_USER/$DJANGO_PROJECT/manage.py migrate
+    /home/$DJANGO_USER/$DJANGO_PROJECT/manage.py createsuperuser
+    chown -R $DJANGO_USER:$DJANGO_USER /home/$DJANGO_USER/$DJANGO_PROJECT 
+fi
