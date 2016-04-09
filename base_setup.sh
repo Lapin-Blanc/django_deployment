@@ -9,7 +9,7 @@ set smartindent
 set ts=4
 set sw=4
 map <F7> :tabp<CR>
-map <F7> :tabn<CR>" > ~/.vimrc
+map <F7> :tabn<CR>" > /etc/vimrc
 
 read -p "Port pour sshd : " SSH_PORT
 sed -i "s/^#Port.*/Port $SSH_PORT/"  /etc/ssh/sshd_config
