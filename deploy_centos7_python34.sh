@@ -134,6 +134,7 @@ echo "<VirtualHost *:80>
 
 # règle pour selinux
 chcon -R -t httpd_sys_rw_content_t /home/$DJANGO_USER
+semanage fcontext -a -t httpd_sys_rw_content_t "/home/$DJANGO_USER(/.*)?"
 systemctl start httpd
 systemctl enable httpd
 # fin de la configuration de l'hôte virtuel
