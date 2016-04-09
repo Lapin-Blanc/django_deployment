@@ -115,7 +115,7 @@ do
     read -p "Racine du site : " BASE_URL
 done
 
-sed -i "s/\(^STATIC_URL.*\)\(static.*\)$/\1$BASE_URL\/\2/" /home/fabien/SurveyProject/SurveyProject/settings.py
+sed -i "s/\(^STATIC_URL.*\)\(static.*\)$/\1$BASE_URL\/\2/" /home/$DJANGO_USER/$DJANGO_PROJECT/$DJANGO_PROJECT/settings.py
 
 echo "<VirtualHost *:80>
     ServerAdmin webmaster@$VIRTUAL_HOST_DOMAIN
