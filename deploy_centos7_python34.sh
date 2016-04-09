@@ -9,6 +9,7 @@ yum -y install python34{,-devel,-setuptools} gcc httpd{,-devel} wget
 easy_install pip
 pip install virtualenv
 
+systemctl start httpd
 # install latest mod_wsgi release at https://github.com/GrahamDumpleton/mod_wsgi/releases
 if [ "$(httpd -t -D DUMP_MODULES | grep wsgi_module)" != "" ]; then
     echo "#############################"
@@ -139,7 +140,7 @@ echo "<VirtualHost *:80>
 # règle pour selinux
 chcon -R -t httpd_sys_rw_content_t /home/$DJANGO_USER
 semanage fcontext -a -t httpd_sys_rw_content_t "/home/$DJANGO_USER(/.*)?"
-systemctl start httpd
+systemctl restart httpd
 systemctl enable httpd
 # fin de la configuration de l'hôte virtuel
 ###########################################
