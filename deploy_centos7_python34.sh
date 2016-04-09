@@ -109,13 +109,21 @@ while [[ ! $VIRTUAL_HOST_DOMAIN =~ $VALID_HOSTNAME_RE ]]
 do
         read -p "Nom de l'hôte virtuel : " VIRTUAL_HOST_DOMAIN
 done
+
+while [[ ! "$BASE_URL" =~ $VALID_USER_RE ]]
+do
+    read -p "Racine du site : " BASE_URL
+done
+
+sed -i "s/\(^STATIC_URL.*\)\(static.*\)$/\1$BASE_URL\/\2/" /home/fabien/SurveyProject/SurveyProject/settings.py
+
 echo "<VirtualHost *:80>
     ServerAdmin webmaster@$VIRTUAL_HOST_DOMAIN
     ServerName $VIRTUAL_HOST_DOMAIN
     ErrorLog logs/$VIRTUAL_HOST_DOMAIN-error
     CustomLog logs/$VIRTUAL_HOST_DOMAIN-access common
 
-    Alias /static/ /home/$DJANGO_USER/$DJANGO_PROJECT/static/
+    Alias /$BASE_URL/static/ /home/$DJANGO_USER/$DJANGO_PROJECT/static/
     <Directory /home/$DJANGO_USER/$DJANGO_PROJECT/static>
         Require all granted
     </Directory>
@@ -128,7 +136,7 @@ echo "<VirtualHost *:80>
 
     WSGIDaemonProcess $DJANGO_PROJECT user=$DJANGO_USER group=$DJANGO_USER python-path=/home/$DJANGO_USER/$DJANGO_PROJECT:/home/$DJANGO_USER/$DJANGO_PROJECT/"$DJANGO_PROJECT"_env/bin:/home/$DJANGO_USER/$DJANGO_PROJECT/"$DJANGO_PROJECT"_env/lib/python3.4/site-packages/
     WSGIProcessGroup $DJANGO_PROJECT
-    WSGIScriptAlias / /home/$DJANGO_USER/$DJANGO_PROJECT/$DJANGO_PROJECT/wsgi.py
+    WSGIScriptAlias /$BASE_URL /home/$DJANGO_USER/$DJANGO_PROJECT/$DJANGO_PROJECT/wsgi.py
 
 </VirtualHost>" > /etc/httpd/conf.d/"$VIRTUAL_HOST_DOMAIN".conf
 
