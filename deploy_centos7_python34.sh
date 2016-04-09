@@ -6,6 +6,7 @@ yum -y upgrade
 ###########################################################
 # installation d'apache, python 3.4, virtualenv et mod_wsgi
 yum -y install python34{,-devel,-setuptools} gcc httpd{,-devel} wget
+easy_install pip
 pip install virtualenv
 
 # install latest mod_wsgi release at https://github.com/GrahamDumpleton/mod_wsgi/releases
