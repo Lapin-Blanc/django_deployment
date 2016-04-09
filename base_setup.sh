@@ -12,6 +12,7 @@ map <F7> :tabn<CR>" >> /etc/vimrc
 read -p "Port pour sshd : " SSH_PORT
 sed -i "s/^#Port.*/Port $SSH_PORT/"  /etc/ssh/sshd_config
 semanage port -a -t ssh_port_t -p tcp $SSH_PORT
+systemctl restart sshd
 
 cat << EOF > /etc/profile.d/custom_prompt.sh
 if [ $(id -u) -eq 0 ];
