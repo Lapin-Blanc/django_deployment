@@ -5,7 +5,7 @@ yum upgrade
 yum -y install vim wget
 
 echo "set autoindent
-set smartindent
+set expandtab
 set ts=4
 set sw=4
 map <F7> :tabp<CR>
