@@ -23,6 +23,8 @@ else # si vous êtes utilisateur normal, invite en rouge
 fi
 EOF
 
+sed -i "s/#\(set bell-style .*\)/\1/" /etc/inputrc
+
 read -p "Utilisateur GIT : " GIT_USER
 read -p "Email GIT : " GIT_EMAIL
 git config --global user.name "$GIT_USER"
