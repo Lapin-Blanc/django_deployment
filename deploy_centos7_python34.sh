@@ -93,6 +93,8 @@ else
     sed -i "s/en-us/fr-be/" $DJANGO_PROJECT/settings.py
     sed -i "s/UTC/Europe\/Brussels/" $DJANGO_PROJECT/settings.py
     echo "STATIC_ROOT = os.path.join(BASE_DIR,'static/')" >> $DJANGO_PROJECT/settings.py
+    echo "MEDIA_URL = '/media/'" >> $DJANGO_PROJECT/settings.py
+    echo "MEDIA_ROOT = os.path.join(BASE_DIR,'media/')" >> $DJANGO_PROJECT/settings.py
     ./manage.py makemigrations
     ./manage.py migrate
     ./manage.py createsuperuser
@@ -120,6 +122,11 @@ echo "<VirtualHost *:80>
     ServerName $VIRTUAL_HOST_DOMAIN
     ErrorLog logs/$VIRTUAL_HOST_DOMAIN-error
     CustomLog logs/$VIRTUAL_HOST_DOMAIN-access common
+
+    Alias /media/ /home/$DJANGO_USER/$DJANGO_PROJECT/media/
+    <Directory /home/$DJANGO_USER/$DJANGO_PROJECT/media>
+        Require all granted
+    </Directory>
 
     Alias /static/ /home/$DJANGO_USER/$DJANGO_PROJECT/static/
     <Directory /home/$DJANGO_USER/$DJANGO_PROJECT/static>
