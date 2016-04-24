@@ -5,8 +5,9 @@ yum -y upgrade
 
 ###########################################################
 # installation d'apache, python 3.4, virtualenv et mod_wsgi
-yum -y install python34{,-devel,-setuptools} gcc httpd{,-devel} wget
-easy_install pip
+yum -y groupinstall "Development Tools"
+yum -y install python34{,-devel,-setuptools} httpd{,-devel} wget
+easy_install-3.4 pip
 pip install virtualenv
 
 systemctl start httpd
