@@ -126,7 +126,10 @@ if [ -d "$DJANGO_PROJECT"_env ]; then
         rm -fr "$DJANGO_PROJECT"_env
         echo "création de l'environnement virtuel"
         virtualenv -p /usr/bin/python3 "$DJANGO_PROJECT"_env
-    # else
+        source "$DJANGO_PROJECT"_env/bin/activate
+        pip install django
+    else
+        source "$DJANGO_PROJECT"_env/bin/activate
     # TODO détecter un problème à l'activation de l'environnement virtuel
     # TODO vérifier ici que Django est bien présent, sinon, le réinstaller
     fi
@@ -134,9 +137,9 @@ if [ -d "$DJANGO_PROJECT"_env ]; then
 else
     echo "création de l'environnement virtuel"
     virtualenv -p /usr/bin/python3 "$DJANGO_PROJECT"_env
+    source "$DJANGO_PROJECT"_env/bin/activate
+    pip install django
 fi
-source "$DJANGO_PROJECT"_env/bin/activate
-pip install django
 # Fin de la création de l'environnement virtuel
 ############
 
@@ -211,13 +214,16 @@ if [ "$YN" == "y" ]; then
         WSGIScriptAlias / /home/$DJANGO_USER/$DJANGO_PROJECT/$DJANGO_PROJECT/wsgi.py
 
     </VirtualHost>" > /etc/httpd/conf.d/"$VIRTUAL_HOST_DOMAIN".conf
-    # règle pour selinux
-    chcon -R -t httpd_sys_rw_content_t /home/$DJANGO_USER
-    semanage fcontext -a -t httpd_sys_rw_content_t "/home/$DJANGO_USER(/.*)?"
     # fin de la configuration de l'hôte virtuel
     ###########################################fi
 fi
 YN=""
+
+# règle pour selinux
+echo "Ajustement des permissins SELinux"
+chcon -R -t httpd_sys_rw_content_t /home/$DJANGO_USER
+semanage fcontext -a -t httpd_sys_rw_content_t "/home/$DJANGO_USER(/.*)?"
+
 systemctl start httpd
 systemctl enable httpd
 echo "Fin de la procédure de déploiement"
