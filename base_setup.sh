@@ -2,12 +2,13 @@
 
 yum -y install epel-release
 yum upgrade
-yum -y install vim wget
+yum -y install vim wget git policycoreutils
 
 echo "set autoindent
 set expandtab
 set ts=4
 set sw=4
+set bg=dark
 map <F7> :tabp<CR>
 map <F7> :tabn<CR>" >> /etc/vimrc
 
