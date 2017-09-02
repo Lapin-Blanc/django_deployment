@@ -23,12 +23,9 @@ fi
 read -p "Voulez-vous (ré)installer mod_wsgi ? [y/N] " YN
 if [ "$YN" == "y" ]; then
     # on force malgré tout la recompilation de mod_wsgi en cas de changement des sources apache, kernel, etc.
-    mkdir mod_wsgi_src
-    pushd mod_wsgi_src
-    wget https://github.com/GrahamDumpleton/mod_wsgi/archive/4.5.1.tar.gz
-    tar xvzf *.tar.gz
-    cd mod_wsgi*
-    ./configure --with-python=/usr/bin/python3
+    git clone https://github.com/GrahamDumpleton/mod_wsgi.git
+    pushd mod_wsgi*
+    ./configure --with-python=$(which python3)
     make && make install
     echo "LoadModule wsgi_module /usr/lib64/httpd/modules/mod_wsgi.so" > /etc/httpd/conf.modules.d/10-wsgi.conf 
     popd
