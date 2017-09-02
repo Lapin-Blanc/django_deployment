@@ -1,7 +1,7 @@
 #!/bin/bash
 
 yum -y install epel-release
-yum upgrade
+yum -y upgrade
 yum -y install vim wget git policycoreutils
 
 echo "set autoindent
